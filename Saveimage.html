@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Save an image</title>
+    <style>
+        img{
+            height: 200px;
+            width: 200px;
+            border: 4px black solid;
+        }
+    </style>
+</head>
+<body>
+    
+    <label>Image Name</label> <input type ="text" id="namebox"> <label id ="extlab"></label> <br><br>
+    <img id = "myimg"> <label id="upprogress"></label> <br><br>
+
+
+    <button id="selbtn">Select Image</button>
+    <button id="upbtn">Upload Image</button>
+    <button id="downbtn">Retrieve Image</button>
+
+
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.4/firebase-app.js";
+        // TODO: Add SDKs for Firebase products that you want to use
+        // https://firebase.google.com/docs/web/setup#available-libraries
+      
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+          apiKey: "AIzaSyBHZFZQA06Slt-59PvkqPWJReSblnwRRYQ",
+          authDomain: "cloud-project-f6c91.firebaseapp.com",
+          projectId: "cloud-project-f6c91",
+          storageBucket: "cloud-project-f6c91.appspot.com",
+          messagingSenderId: "727286148",
+          appId: "1:727286148:web:f6781bd9b49d5af9011dd1"
+        };
+      
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+
+        import { getStorage, ref as sRef, uploadBytesResumable, getDownloadURL }
+         from "https://www.gstatic.com/firebasejs/9.6.4/firebase-storage.js"
+//------------------------variables and ref--------------////
+        var files = [];
+        var reader = new FileReader();
+
+        var namebox = document.getElementById('namebox');
+        var extlab = document.getElementById('extlab');
+        var myimg = document.getElementById('myimg');
+        var proglab = document.getElementById('upprogress');
+        var SelBtn = document.getElementById('selbtn');
+        var UpBtn = document.getElementById('upbtn');
+        var DownBtn = document.getElementById('downbtn');
+
+        var input = document.createElement('input');
+        input.type = 'files';
+        input.onchange = e =>{
+            files = e.target.files;
+
+            var extention = GetFileExt(files[0]);
+            var name = GetFileName(files[0]);
+
+            namebox.value = name;
+            extlab.innerHTML = extention;
+
+            reader.readAsDataURL(files[0]);
+        }
+
+        reader.onload = function(){
+            myimg.src = reader.result;
+        }
+
+        //----------------------selection----------------------//
+
+        SelBtn.onclick = function(){
+            input.click();
+        }
+
+
+        function GetFileExt(file) {
+            var temp = file.name.split('.');
+            var ext = temp.slice((temp.length-1),(temp.length));
+            return '.' + ext[0];
+
+        }
+
+        function GetFileName(file) {
+            var temp = file.name.split('.');
+            var fname = temp.slice(0,-1).join('.');
+            return fname;
+
+        }
+
+
+
+
+      </script>
+    
+
+
+
+
+</body>
+</html>

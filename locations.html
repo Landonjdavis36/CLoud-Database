@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+    label{display: inline-block; width: 80px}
+    input,select{width:120px}
+    </style>
+</head>
+<body>
+    <label>Name</label> <input id = "Namebox" type ="text"> <br><br>
+    <label>City</label> <input id = "Cityebox" type ="text"> <br><br>
+    <label>State</label> <input id = "Statebox" type ="text"> <br><br>
+    <label>Zip</label> <input id = "Zipbox" type ="text"> <br><br>
+
+
+    <hr>
+    <button id = "Insbtn">INSERT</button>
+    <button id = "Selbtn">SELECT</button>
+    <button id = "Updbtn">UPDATE</button>
+    <button id = "Delbtn">DELETE</button>
+<!--------------------------------------------------------import and config----------------------------------------------->
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.3/firebase-app.js";
+        // TODO: Add SDKs for Firebase products that you want to use
+        // https://firebase.google.com/docs/web/setup#available-libraries
+      
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+          apiKey: "AIzaSyBHZFZQA06Slt-59PvkqPWJReSblnwRRYQ",
+          authDomain: "cloud-project-f6c91.firebaseapp.com",
+          projectId: "cloud-project-f6c91",
+          storageBucket: "cloud-project-f6c91.appspot.com",
+          messagingSenderId: "727286148",
+          appId: "1:727286148:web:f6781bd9b49d5af9011dd1"
+        };
+      
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+
+        import {
+            getFirestore, doc, getDoc, setDoc, collection, addDoc, updateDoc, deleteDoc, deleteField
+        }
+        from "https://www.gstatic.com/firebasejs/9.6.3/firebase-firestore.js";
+
+        const db = getFirestore();
+        
+    //-----------------------------------refrences-------------------------------------------->
+        
+        let NameBox = document.getElementByid("Namebox");
+        let CityBox = document.getElementByid("Citybox");
+        let StateBox = document.getElementByid("Statebox");
+        let ZipBox = document.getElementByid("Namebox");
+      
+        let insBtn = document.getElementById("Insbtn");
+        let selBtn = document.getElementById("Selbtn");
+        let updBtn = document.getElementById("Updbtn");
+        let delBtn = document.getElementById("delbtn");
+
+        
+        //----------------------------------------------------------------------------------->
+        async function addDocument_AutoID(){
+            var ref = collection(db, "Thelocationlist");
+
+           const docRef = await  addDoc(ref, {
+                Nameof: NameBox.value,
+                City: CityBox.value,
+                State: StateBox.value,
+                Zip: ZipBox.value
+                }
+
+            )
+            .then(() =>{alert("data added successfully");})
+            .catch(()=>{alert("Unsuccessful opertation, error:" + error);
+        });
+        console.log("document id is"+docRef.id);
+    }
+    //--------------------------------Adding Document---------------------------------------------------->
+        async function addDocument_CustomID(){
+            var ref = doc(db, "Thelocationlist", ZipBox.value);
+
+           await setDoc(
+                ref, {
+                Nameof: NameBox.value,
+                City: CityBox.value,
+                State: StateBox.value,
+                Zip: ZipBox.value
+                }
+
+            )
+            .then(() =>{alert("data added successfully");})
+            .catch(()=>{alert("Unsuccessful opertation, error:" + error);
+        });
+        }
+///----------------------getting Doc----------------------------->
+
+        async function GetADocument(){
+            var ref = doc(db, "Thelocationlist", ZipBox.value);
+            const docSnap = await getDoc(ref);
+
+            if(docSnap.exists()){
+                NameBox.value = docSnap.data().Nameof;
+                CityBox.value = docSnap.data().City;
+                StateBox.value = docSnap.data().State;
+                ZipBox.value = docSnap.data().Zip;
+            }
+            else{
+                alert("No document");
+            }
+
+        }
+        
+      
+//-------------------------update doccument--------------------->
+        async function UpdateFieldsInADocument(){
+            var ref = doc(db, "Thelocationlist", ZipBox.value);
+
+             await updateDoc(
+                ref, {
+                Nameof: NameBox.value,
+                City: CityBox.value,
+                State: StateBox.value,
+                Zip: ZipBox.value
+                }
+
+            )
+            .then(() =>{alert("data updated successfully");})
+            .catch(()=>{alert("Unsuccessful opertation, error:" + error);
+            }); 
+        }
+
+
+        //-----------------------Delete-------------------->
+
+        async function DeleteDocument(){
+            var ref = doc(db, "Thelocation list", Zipbox.value);
+            const docSnap = await getDoc(ref);
+            
+            
+            if(!docSnap.exist()){
+                alert("No Document");
+                return;
+            }
+            await deleteDoc(ref)
+            .then(() =>{alert("data Deleted successfully");})
+            .catch(()=>{alert("Unsuccessful opertation, error:" + error);
+
+            })
+        }
+
+//---------------------------------Btn assign------------------------------------------->
+
+
+        insBtn.addEventListener("click", addDocument_CustomID);
+        selBtn.addEventListener("click", GetADocument);
+        upBtn.addEventListener("click", UpdateFieldsInADocument);
+        delBtn.addEventListener("click", DeleteDocument);
+
+      </script>
+
+
+
+
+
+</body>
+</html>
