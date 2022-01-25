@@ -125,23 +125,53 @@
 
         ///-------------------------------update------------------///
 
+            async function UpdateFieldInADocument(){
+                var ref = doc(db, "LocationList", ZipBox.value);
 
+            const docRef = await updateDoc(
+                ref, {
+                    NameOf: NameBox.value,
+                    City: CityBox.value,
+                    State: StateBox.value
+                    
+                }
+            )
+            .then(()=>{
+                alert("data updated successfully");
+            })
+            .catch((error)=>{
+                alert("Unsuccessful"+error);
+            });
+        }
+            
 
         ///--------------------------------delete----------------///
         
         
-        
+        async function DeleteDocument(){
+            var ref = doc(db, "LocationsList", ZipBox.value);
+            const docSnap = await getDoc(ref);
+
+            if(!docSnap.exists())
+            {
+                alert("No document!");
+                return;
+            }
+
+            await deleteDoc(ref)
+            .then(()=>{
+                alert("data deleted successfully");
+            })
+            .catch((error)=>{
+                alert("Unsuccessful"+error);
+            });
+        }
         
         ////----------------------assign buttons---------------------///
         insBtn.addEventListener("click", AddDocument_CustomID);
         selBtn.addEventListener("click", GetADocument);
-        
-
-
-      
-      
-      
-      
+        upBtn.addEventListener("click",UpdateFieldInADocument);
+        delBtn.addEventListener("click",DeleteDocument); 
       </script>
     
     
